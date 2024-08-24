@@ -1,11 +1,11 @@
 // Initialize the map
-var map = L.map('map').setView([38.765, -120.716], 9); // Centered between the lat/lon range
+var map = L.map('map').setView([38.5, -122.5], 9); // Center the map around Sonoma County
 
-// Add tile layer from OpenStreetMap or a dark-themed map provider
+// Add tile layer
 L.tileLayer.provider('CartoDB.DarkMatter').addTo(map);
 
-// Function to fetch and plot data
-function fetchData() {
+// Function to fetch and plot data from FeatureServer
+function fetchAndPlotData() {
     // Get the current bounds of the map
     const bounds = map.getBounds();
     const lat1 = bounds.getSouthWest().lat;
@@ -13,57 +13,39 @@ function fetchData() {
     const lat2 = bounds.getNorthEast().lat;
     const lon2 = bounds.getNorthEast().lng;
 
-    // API endpoints with dynamic lat/lon bounds
-    const roadClosuresUrl = `https://api.alpha.ca.gov/RoadClosures?lat1=${lat1}&lat2=${lat2}&lon1=${lon1}&lon2=${lon2}`;
-    const chpIncidentsUrl = `https://api.alpha.ca.gov/CHPIncidents?lat1=${lat1}&lat2=${lat2}&lon1=${lon1}&lon2=${lon2}`;
+    // Construct the query URL for the FeatureServer with dynamic bounding box
+    const featureServerUrl = `https://socogis.sonomacounty.ca.gov/map/rest/services/CAPublic/CalTrans_QuickMap_Data/FeatureServer/0/query?where=1=1&geometry=${lon1},${lat1},${lon2},${lat2}&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true&f=geojson`;
 
-    // Clear existing markers
-    clearMarkers();
-
-    // Fetch and plot Road Closures data
-    fetch(roadClosuresUrl)
+    // Fetch data from the FeatureServer
+    fetch(featureServerUrl)
         .then(response => response.json())
         .then(data => {
-            data.forEach(closure => {
-                L.marker([closure.latitude, closure.longitude], {
-                    icon: L.icon({
-                        iconUrl: 'https://example.com/road-closure-icon.png', // Replace with your icon
-                        iconSize: [25, 25]
-                    })
-                }).bindPopup(`<strong>${closure.roadName}</strong><br>${closure.details}`)
-                  .addTo(map);
-            });
-        })
-        .catch(error => console.error('Error fetching Road Closures data:', error));
+            // Clear existing data
+            clearMarkers();
 
-    // Fetch and plot CHP Incidents data
-    fetch(chpIncidentsUrl)
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(incident => {
-                L.marker([incident.latitude, incident.longitude], {
-                    icon: L.icon({
-                        iconUrl: 'https://example.com/chp-incident-icon.png', // Replace with your icon
-                        iconSize: [25, 25]
-                    })
-                }).bindPopup(`<strong>${incident.type}</strong><br>${incident.description}`)
-                  .addTo(map);
-            });
+            // Add new data to the map
+            L.geoJSON(data, {
+                onEachFeature: function (feature, layer) {
+                    if (feature.properties && feature.properties.Name) {
+                        layer.bindPopup(`<strong>${feature.properties.Name}</strong><br>${feature.properties.Description}`);
+                    }
+                }
+            }).addTo(map);
         })
-        .catch(error => console.error('Error fetching CHP Incidents data:', error));
+        .catch(error => console.error('Error fetching data:', error));
 }
 
-// Function to clear existing markers
+// Function to clear existing markers and layers
 function clearMarkers() {
     map.eachLayer(layer => {
-        if (layer instanceof L.Marker) {
+        if (layer instanceof L.GeoJSON) {
             map.removeLayer(layer);
         }
     });
 }
 
 // Initial fetch of data
-fetchData();
+fetchAndPlotData();
 
 // Fetch new data whenever the map stops moving
-map.on('moveend', fetchData);
+map.on('moveend', fetchAndPlotData);
