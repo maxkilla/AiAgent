@@ -4,16 +4,19 @@ var map = L.map('map').setView([36.7783, -119.4179], 7); // Centered on Californ
 // Add tile layer
 L.tileLayer.provider('CartoDB.DarkMatter').addTo(map);
 
-// Function to fetch and parse XML data
+// Function to fetch and parse XML data using a CORS proxy
 function fetchAndDisplayCHPData() {
+    const corsProxy = 'https://cors-anywhere.herokuapp.com/'; // CORS proxy URL
     const url = 'https://media.chp.ca.gov/sa_xml/sa.xml';
+    const proxyUrl = corsProxy + url;
 
-    fetch(url)
+    fetch(proxyUrl)
         .then(response => response.text())
         .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
         .then(data => {
-            // Clear existing markers
+            // Clear existing markers and incident list
             clearMarkers();
+            clearIncidentList();
 
             // Extract and plot incident data
             const incidents = data.getElementsByTagName("item");
@@ -32,6 +35,9 @@ function fetchAndDisplayCHPData() {
                     })
                 }).bindPopup(`<strong>${title}</strong><br>${description}`)
                   .addTo(map);
+
+                // Add incident to the incident list
+                addIncidentToList(title, description);
             }
         })
         .catch(error => console.error('Error fetching and parsing XML data:', error));
@@ -44,6 +50,21 @@ function clearMarkers() {
             map.removeLayer(layer);
         }
     });
+}
+
+// Function to clear the incident list
+function clearIncidentList() {
+    const incidentList = document.getElementById('incident-list');
+    incidentList.innerHTML = '';
+}
+
+// Function to add an incident to the incident list
+function addIncidentToList(title, description) {
+    const incidentList = document.getElementById('incident-list');
+    const incidentItem = document.createElement('div');
+    incidentItem.className = 'incident';
+    incidentItem.innerHTML = `<h3>${title}</h3><p>${description}</p>`;
+    incidentList.appendChild(incidentItem);
 }
 
 // Initial fetch of data
