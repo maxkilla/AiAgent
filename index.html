@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Map Viewer</title>
+    <title>California Traffic and Incidents</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.5.0/leaflet-providers.min.js"></script>
-    <script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
 </head>
 <body>
     <header>
-        <h1>California Live Traffic Conditions</h1>
-        <p>Visualizing real-time traffic data from California </p>
+        <h1>California Road Closures & CHP Incidents</h1>
+        <p>Visualizing live traffic conditions and incidents in California.</p>
     </header>
 
     <div id="map"></div>
 
     <footer>
-        <p>Data source: <a href="https://quickmap.dot.ca.gov/data/lcs2way.kml" target="_blank">Caltrans Live Traffic Data</a></p>
+        <p>Data source: <a href="https://api.alpha.ca.gov" target="_blank">California Open Data APIs</a></p>
     </footer>
 
     <script src="app.js"></script>
