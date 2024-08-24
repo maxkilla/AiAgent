@@ -1,5 +1,5 @@
 // Initialize the map
-var map = L.map('map').setView([34.0522, -118.2437], 10); // Centered on Los Angeles
+var map = L.map('map').setView([39.0429, -122.9158], 12); // Centered on Lakeport, CA
 
 // Add tile layer from OpenStreetMap or a dark-themed map provider
 L.tileLayer.provider('CartoDB.DarkMatter').addTo(map);
@@ -11,5 +11,8 @@ function loadKML(url) {
     }).addTo(map);
 }
 
+// Hardcoded KML URL
+var kmlUrl = 'http://quickmap.dot.ca.gov/data/lcs2way.kml';
+
 // Load KML data
-loadKML('kml/lcs2way.kml');
+loadKML(kmlUrl);
