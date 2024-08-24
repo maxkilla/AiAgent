@@ -11,8 +11,9 @@ function loadKML(url) {
     }).addTo(map);
 }
 
-// Hardcoded KML URL
-var kmlUrl = 'https://quickmap.dot.ca.gov/data/lcs2way.kml';
+// Hardcoded KML URL with a CORS proxy
+var kmlUrl = 'https://cors-anywhere.herokuapp.com/http://quickmap.dot.ca.gov/data/lcs2way.kml';
 
 // Load KML data
 loadKML(kmlUrl);
+
