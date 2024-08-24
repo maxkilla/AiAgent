@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Map Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.5.0/leaflet-providers.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>California Live Traffic Conditions</h1>
+        <p>Visualizing real-time traffic data from California using KML data.</p>
+    </header>
+
+    <div id="map"></div>
+
+    <footer>
+        <p>Data source: <a href="http://quickmap.dot.ca.gov/data/lcs2way.kml" target="_blank">Caltrans Live Traffic Data</a></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
