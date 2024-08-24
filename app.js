@@ -12,7 +12,7 @@ function loadKML(url) {
 }
 
 // Hardcoded KML URL
-var kmlUrl = 'http://quickmap.dot.ca.gov/data/lcs2way.kml';
+var kmlUrl = 'https://quickmap.dot.ca.gov/data/lcs2way.kml';
 
 // Load KML data
 loadKML(kmlUrl);
